@@ -23,17 +23,17 @@ export const register=async (req,res)=>{
             password:hashedPassword
         });
         await user.save();
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         console.log("JWT_SECRET in verify:", process.env.JWT_SECRET);
 console.log("Token:", token);
 
 
-        res.cookie('token', token, { 
+        const isProd = process.env.NODE_ENV === 'production';
+        res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
-
         });
         //sending welcome email
         const mailOptions = {
@@ -61,47 +61,58 @@ export const login=async (req,res)=>{
     const {email,password}=req.body;   
 
     if(!email || !password){
-        return res.status(400).json({message:'All fields are required'});
+        return res.status(400).json({success: false,message:'All fields are required'});
     }
 
     try{
         const user = await userModel.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'Invalid email' });
+            return res.status(400).json({success: false, message: 'Invalid email' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid password' });
+            return res.status(400).json({success: false, message: 'Invalid password' });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
+        const isProd = process.env.NODE_ENV === 'production';
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            secure: isProd,
+            sameSite: isProd ? 'none' : 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
-       return res.status(200).json({ message: 'User logged in successfully', token });
+       return res.status(200).json({success: true, message: 'User logged in successfully', token });
     }catch(error){
         return res.status(500).json({message:error.message});
     }
 }
 
-export const logout= async (req,res)=>{
-    try{
-        res.clearCookie('token',{
-             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-        });
-        return res.status(200).json({message:'User logged out successfully'});
-    }catch(error){
-        return res.status(500).json({message:'Server Error'});
-    }
-}
+export const logout = async (req, res) => {
+  try {
+    const isProd = process.env.NODE_ENV === 'production';
+
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'User logged out successfully',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Server Error',
+    });
+  }
+};
+
 
 //send verification otp to the user's email
 export const sendVerifyOpt= async(req,res)=>{
@@ -209,12 +220,12 @@ export const sendResetOtp= async (req,res)=>{
 export const  resetPassword= async (req,res)=>{
     const {email,otp,newPassword}=req.body;
     if(!email || !otp || !newPassword){
-        return res.status(400).json({message:'All fields are required'});
+        return res.status(400).json({success: false,message:'All fields are required'});
     }
     try{
         const user= await userModel.findOne({email});
         if(!user){
-            return res.status(400).json({message:'User not found'});
+            return res.status(400).json({success: false,message:'User not found'});
         }
         // db.users.findOne({ email: "karanegi.agra@gmail.com" });
 
