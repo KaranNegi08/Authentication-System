@@ -5,14 +5,34 @@ import { AppContext } from '../context/AppContext.jsx';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+// const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { userData, isLoggedin, setUserData, setIsLoggedin } = useContext(AppContext);
+  const { userData,backendUrl, isLoggedin, setUserData, setIsLoggedin } = useContext(AppContext);
+
+  
 
   // Ensure axios sends cookies in all requests
   axios.defaults.withCredentials = true;
+
+  const sendVerificationOtp = async () =>{
+    try{
+      const {data} = await axios.post(backendUrl + '/api/auth/send-verify-otp');
+      console.log(data);
+      if(data.success){
+        navigate('/email-verify');
+        toast.success("Verification OTP sent to your email.");
+        
+      } else {
+        toast.error( "Failed to send verification OTP.");
+      }
+    } catch (error) {
+      console.error("Error sending verification OTP:", error);
+      toast.error(error.message);
+    }
+  }
+
 
   const logout = async () => {
     try {
@@ -49,8 +69,8 @@ const Navbar = () => {
           {userData.name[0].toUpperCase()}
           <div className='absolute hidden group-hover:block top-0 right-0 z-10 text-black rounded pt-10'>
             <ul className='list-none m-0 p-2 bg-gray-100 text-sm shadow-md rounded'>
-              {!userData.isVerified && (
-                <li className='py-1 px-2 hover:bg-gray-200 cursor-pointer'>Verify email</li>
+              {!userData.isAccountVerified && (
+                <li onClick={sendVerificationOtp} className='py-1 px-2 hover:bg-gray-200 cursor-pointer'>Verify email</li>
               )}
               <li 
                 onClick={logout} 

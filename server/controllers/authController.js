@@ -144,7 +144,7 @@ export const sendVerifyOpt= async(req,res)=>{
 
    await transporter.sendMail(mailOptions);  
 
-   return res.status(200).json({message:'Verification email sent'});
+   return res.status(200).json( { success:true, message:'Verification email sent'});
 }catch(error){
        return res.status(500).json({message:'Server Error'});
    }
@@ -172,9 +172,9 @@ export const verifyEmail= async (req,res)=>{
        user.verifyOtp = '';
        user.verifyOtpExpireAt = 0;
        await user.save();
-       return res.status(200).json({message:'Account verified successfully'});
+       return res.status(200).json({success:true, message:'Account verified successfully'});
    }catch(error){
-       return res.status(500).json({message:'Server Error'});
+       return res.status(500).json({success:false, message:'Server Error'});
    }
 }
 
