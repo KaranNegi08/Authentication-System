@@ -1,0 +1,27 @@
+# ===== Environment Files =====
+.env
+Authentication/ .env
+server/ .env
+
+# ===== Node Modules =====
+node_modules/
+Authentication/node_modules/
+server/node_modules/
+
+*.log
+logs/
+npm-debug.log*
+
+# ===== Coverage / Testing =====
+coverage/
+
+# ===== Build / Dist / Cache =====
+dist/
+build/
+Authentication/dist/
+Authentication/build/
+server/dist/
+server/build/
+*.cache
+.cache/
+tmp/
