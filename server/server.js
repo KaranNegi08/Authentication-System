@@ -26,6 +26,14 @@ app.use(cors({
 }));
 
 //API Endpoints
+
+app.get('/' ,(req,res) =>{
+  res.send({
+    activeStatus: true,
+    error:false,
+    message: "Server is up and running"
+  })
+})
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
