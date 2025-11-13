@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
-import Header from "../components/header";
+import Header from "../components/Header";
 
 const Home = () => {
   const [bubbles, setBubbles] = useState([]);
