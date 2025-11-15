@@ -20,10 +20,32 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174", "https://authentication-system08.netlify.app/"], 
-  credentials: true
-}));
+// app.use(cors({
+//   origin: ["http://localhost:5173", "http://localhost:5174", "https://authentication-system08.netlify.app"], 
+//   credentials: true
+// }));
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://authentication-system08.netlify.app"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+app.options("*", cors());
+
 
 //API Endpoints
 
