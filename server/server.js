@@ -56,6 +56,11 @@ app.get('/' ,(req,res) =>{
     message: "Server is up and running"
   })
 })
+
+app.get("/check", (req, res) => {
+  res.json({ msg: "Backend connected!" });
+});
+
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
