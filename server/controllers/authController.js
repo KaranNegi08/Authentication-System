@@ -53,9 +53,9 @@ console.log("Token:", token);
             }
         });
 
-      return  res.status(201).json({message:'User registered successfully', token});
+      return  res.status(201).json({success:true, message:'User registered successfully', token});
     }catch(error){
-       return res.status(500).json({message:'Server Error'});
+       return res.status(500).json({success:false, message:'Server Error'});
     }
 }
 
