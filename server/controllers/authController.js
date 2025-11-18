@@ -33,8 +33,9 @@ console.log("Token:", token);
         const isProd = process.env.NODE_ENV === 'production';
         res.cookie('token', token, {
             httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? 'none' : 'lax',
+            secure: true,
+            sameSite: 'none',
+            path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         //sending welcome email
@@ -82,8 +83,9 @@ export const login=async (req,res)=>{
         const isProd = process.env.NODE_ENV === 'production';
         res.cookie('token', token, {
             httpOnly: true,
-            secure: isProd,
-            sameSite: isProd ? 'none' : 'lax',
+            secure: true,
+            sameSite: 'none',
+            path: "/",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
@@ -99,8 +101,9 @@ export const logout = async (req, res) => {
 
     res.clearCookie('token', {
       httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'none' : 'lax',
+      secure: true,
+      sameSite: 'none',
+      path: "/"
     });
 
     return res.status(200).json({

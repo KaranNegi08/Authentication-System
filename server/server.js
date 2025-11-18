@@ -21,7 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174", "https://authentication-system08.netlify.app"], 
+  origin: "https://authentication-system08.netlify.app", 
+   methods: "GET,POST,PUT,DELETE",
   credentials: true
 }));
 
@@ -45,10 +46,20 @@ app.use(cors({
 //   })
 // );
 
-// app.options("*", cors());
+
+app.options("*", cors());
 
 
 //API Endpoints
+
+const isProd = process.env.NODE_ENV === 'production';
+
+res.cookie("token", token, {
+  httpOnly: true,
+  secure: true,         // IMPORTANT for Netlify + Vercel
+  sameSite: "none",     // REQUIRED for cross-site cookies
+});
+
 
 app.get('/' ,(req,res) =>{
   res.send({
