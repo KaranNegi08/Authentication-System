@@ -28,7 +28,8 @@ app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
-  "https://authentication-system08.netlify.app"
+  "https://authentication-system08.netlify.app",
+  "https://authentication-system-2emx.onrender.com"
 ];
 
 app.use(
