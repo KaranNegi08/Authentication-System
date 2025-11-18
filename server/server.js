@@ -54,11 +54,6 @@ app.options("*", cors());
 
 const isProd = process.env.NODE_ENV === 'production';
 
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,         // IMPORTANT for Netlify + Vercel
-  sameSite: "none",     // REQUIRED for cross-site cookies
-});
 
 
 app.get('/' ,(req,res) =>{
