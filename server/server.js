@@ -12,16 +12,12 @@ const port=process.env.PORT||4000;
 connectDB();
 
 
-
-
-
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-  origin: "https://authentication-system08.netlify.app", 
+  origin: ["https://authentication-system08.netlify.app","https://authentication-system-1-eqe4.onrender.com"], 
    methods: "GET,POST,PUT,DELETE",
   credentials: true
 }));
@@ -51,8 +47,6 @@ app.options("*", cors());
 
 
 //API Endpoints
-
-const isProd = process.env.NODE_ENV === 'production';
 
 
 
